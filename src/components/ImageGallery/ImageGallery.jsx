@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ImageGalleryBox } from './ImageGallery.styled';
 import { ImageGalleryItem } from '../ImageGalleryItem/ImageGalleryItem';
 import { Loader } from '../Loader/Loader';
@@ -6,70 +6,57 @@ import { LoadMore } from '../Button/Button';
 import { newsApiService } from 'API/AxiosCreate';
 import PropTypes from 'prop-types';
 
-export class ImageGallery extends Component {
-  state = {
-    data: [],
-    page: 1,
-    isLoader: false,
-  };
+export const ImageGallery = ({ searchQuery }) => {
+  const [data, setData] = useState([]);
+  const [page, setPage] = useState(1);
+  const [isLoader, setIsLoader] = useState(false);
 
-  async componentDidUpdate(prevProps, prevState) {
-    const {
-      state: { page },
-      props: { searchQuery },
-      hideLoader,
-      showLoader,
-    } = this;
-    const prevName = prevProps.searchQuery;
-    const nextName = this.props.searchQuery;
-    const prevPage = prevState.page;
-    const nextPage = this.state.page;
-
-    if (prevName !== nextName) {
-      this.setState({ page: 1, data: [] });
-      newsApiService(searchQuery, page, hideLoader, showLoader).then(res => {
-        this.setState({ data: res });
-      });
+  useEffect(() => {
+    if (searchQuery === '') {
+      return;
     }
+    setPage(1);
+    setData([]);
+    newsApiService(searchQuery, 1, hideLoader, showLoader).then(res => {
+      setData(res);
+    });
+  }, [searchQuery]);
 
-    if (prevPage !== nextPage) {
-      newsApiService(searchQuery, page, hideLoader, showLoader).then(res => {
-        this.setState(({ data }) => ({
-          data: [...data, ...res],
-        }));
-      });
+  useEffect(() => {
+    if (page === 1) {
+      return;
     }
-  }
+    newsApiService(searchQuery, page, hideLoader, showLoader).then(res => {
+      setData(prevData => {
+        return [...prevData, ...res];
+      });
+    });
+  }, [page]);
 
-  hideLoader = () => {
-    this.setState({ isLoader: false });
+  const hideLoader = () => {
+    setIsLoader(false);
   };
 
-  showLoader = () => {
-    this.setState({ isLoader: true });
+  const showLoader = () => {
+    setIsLoader(true);
   };
 
-  onClickLoadMore = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
+  const onClickLoadMore = () => {
+    setPage(prevPage => prevPage + 1);
   };
-  render() {
-    return (
-      <>
-        {this.state.isLoader && <Loader />}
-        <ImageGalleryBox onClick={this.onGalleryListClick}>
-          {this.state.data.map(img => {
-            return <ImageGalleryItem data={img} key={img.id} />;
-          })}
-        </ImageGalleryBox>
-        {this.state.data.length > 11 && (
-          <LoadMore onClickLoadMore={this.onClickLoadMore} />
-        )}
-      </>
-    );
-  }
-}
+
+  return (
+    <>
+      {isLoader && <Loader />}
+      <ImageGalleryBox>
+        {data.map(img => {
+          return <ImageGalleryItem data={img} key={img.id} />;
+        })}
+      </ImageGalleryBox>
+      {data.length > 11 && <LoadMore onClickLoadMore={onClickLoadMore} />}
+    </>
+  );
+};
 
 LoadMore.propTypes = {
   ImageGallery: PropTypes.string,

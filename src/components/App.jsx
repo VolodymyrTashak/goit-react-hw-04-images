@@ -1,21 +1,17 @@
-import { Component } from 'react';
+import React, { useState } from 'react';
 import { AppBox } from './App.styled';
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
-export class App extends Component {
-  state = {
-    cardName: '',
-  };
-  handleFormSubmit = searchQuery => {
-    this.setState({ cardName: searchQuery });
-  };
+export const App = () => {
+  const [cardName, setCardName] = useState('');
 
-  render() {
-    return (
-      <AppBox>
-        <Searchbar onSubmit={this.handleFormSubmit} />
-        <ImageGallery searchQuery={this.state.cardName} />
-      </AppBox>
-    );
-  }
-}
+  const handleFormSubmit = searchQuery => {
+    setCardName(searchQuery);
+  };
+  return (
+    <AppBox>
+      <Searchbar onSubmit={handleFormSubmit} />
+      <ImageGallery searchQuery={cardName} />
+    </AppBox>
+  );
+};
