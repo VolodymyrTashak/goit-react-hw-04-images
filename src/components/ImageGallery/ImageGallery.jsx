@@ -31,7 +31,7 @@ export const ImageGallery = ({ searchQuery }) => {
         return [...prevData, ...res];
       });
     });
-  }, [page, searchQuery]);
+  }, [page]);
 
   const hideLoader = () => {
     setIsLoader(false);
