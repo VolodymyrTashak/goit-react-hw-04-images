@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { newsApiService } from 'api/AxiosCreate';
 import PropTypes from 'prop-types';
+
+import { newsApiService } from 'api/AxiosCreate';
 import { ImageGalleryItem } from '../ImageGalleryItem/ImageGalleryItem';
 import { Loader } from '../Loader/Loader';
 import { LoadMore } from '../Button/Button';
@@ -11,6 +12,18 @@ export const ImageGallery = ({ searchQuery }) => {
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
   const [isLoader, setIsLoader] = useState(false);
+
+  const hideLoader = () => {
+    setIsLoader(false);
+  };
+
+  const showLoader = () => {
+    setIsLoader(true);
+  };
+
+  const onClickLoadMore = () => {
+    setPage(prevPage => prevPage + 1);
+  };
 
   useEffect(() => {
     if (searchQuery === '') {
@@ -33,18 +46,6 @@ export const ImageGallery = ({ searchQuery }) => {
       });
     });
   }, [searchQuery, page]);
-
-  const hideLoader = () => {
-    setIsLoader(false);
-  };
-
-  const showLoader = () => {
-    setIsLoader(true);
-  };
-
-  const onClickLoadMore = () => {
-    setPage(prevPage => prevPage + 1);
-  };
 
   return (
     <>

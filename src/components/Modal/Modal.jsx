@@ -7,23 +7,24 @@ import { ModalBox, Overlay } from './Modal.styled';
 const modalRoot = document.querySelector('#modal-root');
 
 export const Modal = ({ onClose, children }) => {
+  const handleKeyDown = e => {
+    if (e.code === 'Escape') {
+      onClose();
+    }
+  };
+
+  const handleBackdrop = e => {
+    if (e.currentTarget === e.target) {
+      onClose();
+    }
+  };
+
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
   });
-
-  const handleKeyDown = e => {
-    if (e.code === 'Escape') {
-      onClose();
-    }
-  };
-  const handleBackdrop = e => {
-    if (e.currentTarget === e.target) {
-      onClose();
-    }
-  };
 
   return createPortal(
     <Overlay onClick={handleBackdrop}>
