@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import PropTypes from 'prop-types';
+import { BsSearch } from 'react-icons/bs';
+
 import {
   SearchbarBox,
   SearchForm,
   SearchFormButton,
   SearchFormInput,
 } from './Searchbar.styled';
-import { BsSearch } from 'react-icons/bs';
 
 export const Searchbar = ({ onSubmit }) => {
   const [searchQuery, setSearchQuery] = useState('');

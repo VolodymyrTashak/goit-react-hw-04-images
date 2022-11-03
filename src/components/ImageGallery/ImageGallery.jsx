@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { ImageGalleryBox } from './ImageGallery.styled';
+import { newsApiService } from 'api/AxiosCreate';
+import PropTypes from 'prop-types';
 import { ImageGalleryItem } from '../ImageGalleryItem/ImageGalleryItem';
 import { Loader } from '../Loader/Loader';
 import { LoadMore } from '../Button/Button';
-import { newsApiService } from 'API/AxiosCreate';
-import PropTypes from 'prop-types';
+
+import { ImageGalleryBox } from './ImageGallery.styled';
 
 export const ImageGallery = ({ searchQuery }) => {
   const [data, setData] = useState([]);
